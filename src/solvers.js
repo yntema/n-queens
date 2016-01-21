@@ -17,17 +17,15 @@
 
 window.findNRooksSolution = function(n) {
   var board = new Board({n:n});
-  var results;
   var rookPlacer = function(rowIndex) {
     if (n === rowIndex) {
-      results = board.rows();
       return;
     } else {
       for (var i = 0; i < n; i++) {
-        board.togglePiece(rowIndex, i);
-        if (board.hasAnyRooksConflicts()) {
-          board.togglePiece(rowIndex, i);
-          continue;
+        board.togglePiece(rowIndex, i);            // placing queen
+        if (board.hasAnyRooksConflicts()) {        // checking if placed queen has conflicts
+          board.togglePiece(rowIndex, i);          // removing queen if there is a conflict
+          continue;                                // moving to 
         }
         rowIndex++;
       }
@@ -35,7 +33,7 @@ window.findNRooksSolution = function(n) {
     }
   };
   rookPlacer(0);
-  return results;
+  return board.rows();
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
@@ -50,25 +48,38 @@ window.countNRooksSolutions = function(n) {
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
   var board = new Board({n:n});
-  var results;
+  var queenCounter = 0;
   var queenPlacer = function(rowIndex) {
-    if (n === rowIndex) {
-      results = board.rows();
-      return;
+    if (n === rowIndex && n === queenCounter) {
+      return true;
     } else {
       for (var i = 0; i < n; i++) {
         board.togglePiece(rowIndex, i);
+        queenCounter++;
+        // if (!board.hasAnyQueensConflicts() && n === rowIndex && n === queenCounter)
         if (board.hasAnyQueensConflicts()) {
           board.togglePiece(rowIndex, i);
+          queenCounter--;
           continue;
         }
-        queenPlacer(rowIndex++);
+        if(!queenPlacer(rowIndex + 1)) {
+          board.togglePiece(rowIndex, i);
+          queenCounter--;
+        } else {
+          return board.rows();
+        }
       }
     }
+    return false;
   };
   queenPlacer(0);
-  return results;
+  return board.rows();
 };
+
+// check if at last row n !== number of Q on board. Add queen counter
+// 
+
+
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
