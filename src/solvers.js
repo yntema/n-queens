@@ -22,12 +22,8 @@ window.findNRooksSolution = function(n) {
       return;
     } else {
       for (var i = 0; i < n; i++) {
-        board.togglePiece(rowIndex, i);            // placing queen
-        if (board.hasAnyRooksConflicts()) {        // checking if placed queen has conflicts
-          board.togglePiece(rowIndex, i);          // removing queen if there is a conflict
-          continue;                                // moving to 
-        }
-        rowIndex++;
+        board.togglePiece(rowIndex, i);
+        board.hasAnyRooksConflicts() ? board.togglePiece(rowIndex, i) : rowIndex++;
       }
       rookPlacer(rowIndex);
     }
@@ -48,23 +44,16 @@ window.countNRooksSolutions = function(n) {
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
   var board = new Board({n:n});
-  var queenCounter = 0;
   var queenPlacer = function(rowIndex) {
-    if (n === rowIndex && n === queenCounter) {
+    if (n === rowIndex) {
       return true;
     } else {
       for (var i = 0; i < n; i++) {
         board.togglePiece(rowIndex, i);
-        queenCounter++;
-        // if (!board.hasAnyQueensConflicts() && n === rowIndex && n === queenCounter)
         if (board.hasAnyQueensConflicts()) {
           board.togglePiece(rowIndex, i);
-          queenCounter--;
-          continue;
-        }
-        if(!queenPlacer(rowIndex + 1)) {
+        } else if (!queenPlacer(rowIndex + 1)) {
           board.togglePiece(rowIndex, i);
-          queenCounter--;
         } else {
           return board.rows();
         }
