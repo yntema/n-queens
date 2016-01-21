@@ -18,44 +18,33 @@
 window.findNRooksSolution = function(n) {
   var board = new Board({n:n});
   var results;
-  // Initialize count variable as 0
-  // Call recursive function which takes parameter rowIndex
   var rookPlacer = function(rowIndex) {
-  // If base case (n is equal to count)
     if (n === rowIndex) {
-    // Return solution
-      results = board.rows(); //figure out what solution variable is
-      return results;
+      results = board.rows();
+      return;
     } else {
-    // Else trigger recursive case (count is less than n)
-      // Loop through row
       for (var i = 0; i < n; i++) {
-        // If hasAnyRooksConflicts is false
         board.togglePiece(rowIndex, i);
-
         if (board.hasAnyRooksConflicts()) {
-          // Place rook with togglePiece
           board.togglePiece(rowIndex, i);
           continue;
         }
-          // Increment counter
         rowIndex++;
-          // Call recursive function with incremented rowIndex
       }
       rookPlacer(rowIndex);
     }
   };
   rookPlacer(0);
-  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return results;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
-
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  if(n === 1) {
+    return n;
+  } else {
+    return n*countNRooksSolutions(n-1);
+  }
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
