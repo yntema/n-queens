@@ -83,6 +83,8 @@ window.countNQueensSolutions = function(n) {
           board.togglePiece(rowIndex, i);
         } else {
           solutionCounter++;
+          board.togglePiece(rowIndex, i);
+          // queenPlacer(rowIndex); 
         }
       }
     }
